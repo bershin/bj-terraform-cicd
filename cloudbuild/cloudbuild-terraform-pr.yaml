@@ -1,0 +1,19 @@
+steps:
+  - id: 'Grab secrets'
+    waitFor: [-]
+    name: "gcr.io/bj-terraform-cicd/$_IMAGE_NAME:stable"
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+         # Grab the Terraform Service Account from secrets manager for this project
+         echo "Deploying to GCP project $PROJECT_ID"
+         gcloud secrets versions access latest --secret="jenkins-terraform-key" --project bj-credentials > /workspace/tf_sa.json
+
+         # Activate Terraform SA
+         gcloud auth activate-service-account --key-file tf_sa.json
+         echo "Looking for ssh keys for rljenkins user (jenkins-rldeploy-key)"
+         gcloud secrets versions access latest --secret="jenkins-bjdeploy-key" --project bj-credentials > /workspace/bjdeploy-key
+
+substitutions:
+  _IMAGE_NAME: bj-cicd-terraform
