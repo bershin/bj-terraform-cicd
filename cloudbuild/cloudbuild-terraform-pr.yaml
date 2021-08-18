@@ -15,5 +15,40 @@ steps:
          echo "Looking for ssh keys for rljenkins user (jenkins-rldeploy-key)"
          gcloud secrets versions access latest --secret="jenkins-bjdeploy-key" --project bj-credentials > /workspace/bjdeploy-key
 
+  - id: 'TF Checker'
+    waitFor: ['Grab secrets']
+    name: "gcr.io/bj-terraform-cicd/$_IMAGE_NAME:stable"
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        set -e
+        # cp /workspace/bjdeploy-key /root/.ssh/id_rsa
+        # chmod 0600 /root/.ssh/id_rsa
+        sh /workspace/scripts/pr_checker.sh
+
+  - id: 'Cloudbuild Yaml Lint'
+    waitFor: [-]
+    name: 'sdesbure/yamllint'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+          # Apply terraform for the specified environment
+          yamllint -d "{extends: relaxed, rules: {line-length: {max: 150}}}" /workspace/cloudbuild
+          echo "Yaml check completed"
+
+  - id: 'Bash Lint'
+    waitFor: [-]
+    name: 'bash'
+    args:
+      - '-c'
+      - |
+          set -e
+          echo "Checking scripts in /scripts"
+          for script in $(ls scripts/*.sh); do
+            bash -n ${script}
+          done
+          
 substitutions:
   _IMAGE_NAME: bj-cicd-terraform
