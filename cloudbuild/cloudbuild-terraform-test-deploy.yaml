@@ -39,7 +39,7 @@ steps:
       - '-c'
       - |
           set -e
-          /scripts/lock-build $PROJECT_ID
+          /scripts/lock-build.sh $PROJECT_ID
           exit 0
 
 substitutions:
