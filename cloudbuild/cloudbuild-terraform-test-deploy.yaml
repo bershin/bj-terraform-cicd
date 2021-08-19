@@ -61,3 +61,5 @@ steps:
 
 substitutions:
   _IMAGE_NAME: bj-cicd-terraform
+
+timeout: '7200s'
