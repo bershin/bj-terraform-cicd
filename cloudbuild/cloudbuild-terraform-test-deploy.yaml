@@ -6,6 +6,7 @@ steps:
     args:
       - '-c'
       - |
+        set -e
          # Grab the Terraform Service Account from secrets manager for this project
          echo "Deploying to GCP project $PROJECT_ID"
          gcloud secrets versions access latest --secret="jenkins-$PROJECT_ID-key" --project bj-credentials > /workspace/tf_sa.json
@@ -29,6 +30,17 @@ steps:
          cd tf
          git checkout $COMMIT_SHA
          git rev-parse --short 'HEAD^{tree}' > /workspace/tree_sha
-         
+
+  - id: 'Check for Build Locks'
+    waitFor: ['Grab secrets']
+    name: "gcr.io/bj-terraform-cicd/$_IMAGE_NAME:stable"
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+          set -e
+          /scripts/lock-build $PROJECT_ID
+          exit 0
+
 substitutions:
   _IMAGE_NAME: bj-cicd-terraform
