@@ -1,6 +1,6 @@
 FROM hashicorp/terraform:0.12.29
-# RUN mkdir /terraform
-COPY terraform /terraform
+COPY terraform-network /terraform-network
+COPY tfvars /tfvars
 COPY scripts /scripts
 RUN apk add --no-cache git docker curl bash python3 jq && \
     curl https://sdk.cloud.google.com > /tmp/install.sh && \
