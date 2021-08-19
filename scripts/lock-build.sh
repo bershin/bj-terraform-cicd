@@ -36,6 +36,7 @@ done
 
 if [ ${_locked} -eq 0 ]; then
   date +%d-%m-%Y > $(basename ${LOCK_FILE})
+  echo $(basename ${LOCK_FILE})
   gsutil cp $(basename ${LOCK_FILE}) ${LOCK_FILE}
 else
   echo "Failed to secure a Terraform build lock"
