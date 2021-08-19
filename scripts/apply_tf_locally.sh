@@ -14,8 +14,9 @@ PARALLELISM=10
 
 SERVICE_ACCOUNT_JSON=${CUR_DIR}/tf_sa.json
 INIT_FLAGS="-backend-config=prefix=${PROJECT_ID} -backend-config=bucket=terraform-state-bj-dev-vpc"
-
-cd ../terraform/
+pwd
+ls
+cd terraform/
 echo "################## Terraform init stage ##################"
 GOOGLE_CLOUD_KEYFILE_JSON="$SERVICE_ACCOUNT_JSON" GOOGLE_APPLICATION_CREDENTIALS="$SERVICE_ACCOUNT_JSON" terraform init $INIT_FLAGS
 
