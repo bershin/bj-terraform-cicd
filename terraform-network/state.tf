@@ -1,5 +1,5 @@
-# terraform {
-#   backend "gcs" {
-#     bucket = "terraform-state-bj"
-#   }
-# }
+terraform {
+  backend "gcs" {
+    bucket = "terraform-state-bj"
+  }
+}
