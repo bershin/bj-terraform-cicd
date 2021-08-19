@@ -61,10 +61,10 @@ steps:
 
           if ! /scripts/apply_tf_locally.sh $PROJECT_ID ; then
            echo "Terraform Apply failed - aborting build"
-           /scripts/unlock-build $PROJECT_ID
+           /scripts/unlock-build.sh $PROJECT_ID
            exit 1
          fi
-         
+
 substitutions:
   _IMAGE_NAME: bj-cicd-terraform
 
